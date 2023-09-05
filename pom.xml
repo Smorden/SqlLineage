@@ -14,6 +14,7 @@
         <module>larkmt-assembly</module>
         <module>larkmt-core</module>
         <module>larkmt-rpc</module>
+        <module>metadata-platform</module>
     </modules>
 
 
