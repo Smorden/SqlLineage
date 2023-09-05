@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.siheng.cn.admin.entity.JobDatasource;
 import com.siheng.cn.admin.service.DatasourceQueryService;
 import com.siheng.cn.admin.service.JobDatasourceService;
-import com.larkmt.cn.admin.tool.query.*;
 import com.siheng.cn.admin.tool.query.BaseQueryTool;
 import com.siheng.cn.admin.tool.query.HBaseQueryTool;
 import com.siheng.cn.admin.tool.query.MongoDBQueryTool;

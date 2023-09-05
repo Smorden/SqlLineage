@@ -1,6 +1,5 @@
 package com.siheng.cn.admin.core.conf;
 
-import com.larkmt.cn.admin.mapper.*;
 import com.siheng.cn.admin.core.scheduler.JobScheduler;
 import com.siheng.cn.admin.mapper.JobDatasourceMapper;
 import com.siheng.cn.admin.mapper.JobGroupMapper;
