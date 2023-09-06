@@ -2,6 +2,8 @@ server:
   port: 8080
 
 
+
+
 siheng:
   gitlab:
     host: http://git.server.oigbuy.com/
@@ -9,3 +11,31 @@ siheng:
     namespace: bigdata
     projectName: dw_core_sql
     branch: test
+
+
+
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    first:
+      url: jdbc:mysql://localhost:3306/aaa?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    second:
+      url: jdbc:mysql://localhost:3306/bbb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      initial-size: 5 #初始连接数
+      max-active: 20 #最大连接池
+      max-wait: 6000 #最大等待时长，毫秒
+      min-idle: 1 #最小连接池
+      test-while-idle: true #连接时检测
+      test-on-borrow: false #申请连接时执行检测
+      test-on-return: false #规划连接时执行检测
+      time-between-eviction-runs-millis: 60000 #检测间隔时间，毫秒
+      min-evictable-idle-time-millis: 300000 #连接池最小生存时间，毫秒
+      max-evictable-idle-time-millis: 900000 #连接池最大生存时间，毫秒
