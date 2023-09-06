@@ -5,7 +5,7 @@ server:
 siheng:
   gitlab:
     host: http://git.server.oigbuy.com/
-      accessToken: we_x-cPYsdp4Ane9sHed
-      namespace: bigdata
-      projectName: dw_core_sql
-      branch: test
+    accessToken: we_x-cPYsdp4Ane9sHed
+    namespace: bigdata
+    projectName: dw_core_sql
+    branch: test
