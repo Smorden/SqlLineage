@@ -24,20 +24,20 @@ import javax.sql.DataSource;
 @MapperScan(basePackages = {"com.siheng.metadataplatform.mapper.first"}, sqlSessionFactoryRef = "firstSqlSessionFactory")
 public class FirstDataSourceConfig {
 
-//    @Primary
+    @Primary
     @Bean(name = "firstDataSource")
     @ConfigurationProperties("spring.datasource.first")
     public DataSource dataSource() {
         return DruidDataSourceBuilder.create().build();
     }
 
-//    @Primary
+    @Primary
     @Bean(name = "firstTransactionManager")
     public DataSourceTransactionManager dataSourceTransactionManager(@Qualifier("firstDataSource") DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource());
     }
 
-//    @Primary
+    @Primary
     @Bean(name = "firstSqlSessionFactory")
     public SqlSessionFactory sqlSessionFactory(@Qualifier("firstDataSource") DataSource dataSource) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
@@ -46,7 +46,7 @@ public class FirstDataSourceConfig {
         return factoryBean.getObject();
     }
 
-//    @Primary
+    @Primary
     @Bean(name = "firstSqlSessionTemplate")
     public SqlSessionTemplate sqlSessionTemplate(@Qualifier("firstSqlSessionFactory") SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
