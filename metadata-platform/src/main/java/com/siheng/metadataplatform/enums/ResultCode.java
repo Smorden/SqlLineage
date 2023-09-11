@@ -10,6 +10,7 @@ import lombok.Data;
 public enum ResultCode {
 
     SUCCESS(200, "成功"),
+    SUCCESS_NOT_DATA(200, "需要更新的数据"),
     ERROR(500, "服务器异常");
 
     private Integer code;

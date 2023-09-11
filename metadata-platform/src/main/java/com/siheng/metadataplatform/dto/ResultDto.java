@@ -30,8 +30,18 @@ public class ResultDto<T> implements Serializable {
         this.code = code;
     }
 
+    public ResultDto(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
     public static <T> ResultDto<T> success() {
         return new ResultDto<T>(ResultCode.SUCCESS.getCode());
+    }
+
+
+    public static <T> ResultDto<T> success(String message) {
+        return new ResultDto<T>(ResultCode.SUCCESS.getCode(), message);
     }
 
 
