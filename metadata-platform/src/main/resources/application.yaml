@@ -39,3 +39,8 @@ spring:
       time-between-eviction-runs-millis: 60000 #检测间隔时间，毫秒
       min-evictable-idle-time-millis: 300000 #连接池最小生存时间，毫秒
       max-evictable-idle-time-millis: 900000 #连接池最大生存时间，毫秒
+    neo4j:
+      url: jdbc:neo4j:bolt://10.10.145.242:7687
+      driver-class-name: org.neo4j.jdbc.bolt.BoltDriver
+      username: neo4j
+      password: neo4j123

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.siheng.metadataplatform.service.SqlLineageService;
-import org.gitlab4j.api.GitLabApi;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
