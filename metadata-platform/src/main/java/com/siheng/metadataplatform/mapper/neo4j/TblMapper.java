@@ -21,4 +21,6 @@ public interface TblMapper {
 
     void deleteTblAndAllTblRelationShipList(@Param("tblName") String tblName);
 
+    void deleteAllTblAndAllTblRelationShip();
+
 }

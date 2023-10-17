@@ -17,16 +17,16 @@ public class GitLabChangeFilesExample {
 
         try {
             // 获取某个仓库下某个文件的内容
-            RepositoryFile file = gitLabApi.getRepositoryFileApi().getFile("404", "com.siheng.dws/dws_ivct_goods_warehouse_stock_ds.sql", "test");
+            RepositoryFile file = gitLabApi.getRepositoryFileApi().getFile("404", "com.siheng.dwd.fact/dwd_dim_pcct_negotiate_seek_task_df.sql", "release");
             String escapedContent = file.getContent();
 
-            byte[] decodedBytes = Base64.getDecoder().decode(escapedContent);
-            String decodedContent = new String(decodedBytes);
+//            byte[] decodedBytes = Base64.getDecoder().decode(escapedContent);
+//            String decodedContent = new String(decodedBytes);
 
             // 输出文件内容
-            System.out.println(decodedContent);
+            System.out.println(escapedContent);
         } catch (Exception e) {
-            e.printStackTrace();
+            if(!e.getMessage().equals("404 File Not Found")) e.printStackTrace();
         }
     }
 }

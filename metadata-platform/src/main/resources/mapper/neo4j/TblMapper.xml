@@ -37,6 +37,12 @@
         DETACH DELETE n
     </delete>
 
+    <delete id="deleteAllTblAndAllTblRelationShip">
+        MATCH (n)
+        DETACH DELETE n
+    </delete>
+
+
     <!--    <update id="updateMovie" parameterType="com.minant.mant.form.MovieInfoForm">-->
     <!--        match (people:Movie)-->
     <!--        where people.title = #{title}-->

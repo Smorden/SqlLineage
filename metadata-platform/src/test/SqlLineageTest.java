@@ -12,10 +12,10 @@ import java.util.*;
  */
 public class SqlLineageTest {
     public static void main(String[] args) throws Exception {
-        File folder = new File("/Users/shiyuchao/work/workspace/dw_core_sql/com.siheng.dwd.dim");
+        File folder = new File("/Users/shiyuchao/work/workspace/dw_core_sql/com.siheng.ads");
         File[] listOfFiles = folder.listFiles();
 
-        List<String> myList = new ArrayList<String>(Arrays.asList("dwd_dim_sales_channel_sku_site_dep_ds.sql"));
+        List<String> myList = new ArrayList<String>(Arrays.asList("ads_sad_sku_sales_details_di.sql"));
 
         for (File file : listOfFiles) {
             if (myList.contains(file.getName())) {
@@ -30,12 +30,13 @@ public class SqlLineageTest {
 
 
                 String fileContents = sb.toString();
+                String replace = fileContents.replace("[ broadcast ]", " ");
 
                 String keyword = "-- begin_insert --";
                 int index = fileContents.indexOf(keyword);
 
-                if (index != -1 && index + keyword.length() < fileContents.length()) {
-                    String result = fileContents.substring(index + keyword.length());
+                if (index != -1 && index + keyword.length() < replace.length()) {
+                    String result = replace.substring(index + keyword.length());
                     Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(result);
                     System.out.println(stringSetMap);
                 }

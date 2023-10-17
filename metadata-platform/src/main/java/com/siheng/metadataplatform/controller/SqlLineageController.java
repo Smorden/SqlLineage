@@ -1,6 +1,9 @@
 package com.siheng.metadataplatform.controller;
 
 import com.siheng.metadataplatform.dto.ResultDto;
+import com.siheng.metadataplatform.service.SqlLineageService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,9 @@ import java.util.Set;
 @RequestMapping("/sql-lineage")
 public class SqlLineageController {
 
+
+    @Autowired
+    private SqlLineageService sqlLineageService;
 
     @PostMapping(value = "/update")
     public ResultDto updateSqlLineage(@RequestBody Map<String, Object> request) {
@@ -50,6 +56,23 @@ public class SqlLineageController {
 //
 //        return "Hello, World!";
 //    }
+
+
+    @PostMapping(value = "/init")
+    public ResultDto initAllSqlLineage(@RequestBody Map<String, Object> request) {
+
+        if (!request.containsKey("branch") || request.get("branch") == null) return ResultDto.error("请传入正确的分支名称");
+        try {
+            String branch = request.get("branch").toString();
+            sqlLineageService.initAllSqlLineage(branch);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultDto.error(e.getMessage());
+
+        }
+        return ResultDto.success("初始化成功");
+    }
+
 
 
 }

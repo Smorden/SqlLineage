@@ -8,5 +8,10 @@ import java.util.Map;
  * @Desc
  */
 public interface SqlLineageService {
+
+
+
     int updateSqlLineage(Map<Object, Object> map);
+
+    void initAllSqlLineage(String branch) throws Exception;
 }

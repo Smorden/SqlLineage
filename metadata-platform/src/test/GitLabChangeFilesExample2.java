@@ -5,10 +5,7 @@ import org.gitlab4j.api.utils.ISO8601;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -28,8 +25,8 @@ public class GitLabChangeFilesExample2 {
 
         // 指定分支名称和起止时间
         String branchName = "test";
-        Date startDate = new SimpleDateFormat("yyyyMMdd").parse("20230904");
-        Date endDate = new SimpleDateFormat("yyyyMMdd").parse("20230905");
+        Date startDate = new SimpleDateFormat("yyyyMMdd").parse("20220101");
+        Date endDate = new SimpleDateFormat("yyyyMMdd").parse("20231231");
 
         // 获取分支的变更提交列表
         List<Commit> commits1 = gitLabApi.getCommitsApi().getCommits("404", branchName, startDate, endDate);
@@ -52,6 +49,19 @@ public class GitLabChangeFilesExample2 {
 
 //        List<String> collect = fileNames.stream().filter(line -> line.startsWith("com.siheng.dws"))
 //                .collect(Collectors.toList());
+
+        List<String> packages = Arrays.asList("com.siheng.ads",
+                "com.siheng.dwd.binlog",
+                "com.siheng.dwd.dim",
+                "com.siheng.dwd.fact",
+                "com.siheng.dwm",
+                "com.siheng.dws",
+                "com.siheng.dwt",
+                "com.siheng.market.replenishment");
+
+
+        fileNames.removeIf(element -> packages.stream().noneMatch(element::startsWith));
+
         for (String fileName : fileNames) {
             System.out.println(fileName);
         }
