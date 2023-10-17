@@ -67,8 +67,13 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             String sqlContent = allContent.substring(startIndex + "-- begin_insert --".length());
             String replace = sqlContent.replace("[ broadcast ]", "");
 //            System.out.println(sqlContent);
-            Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(replace);
-            System.out.println(stringSetMap);
+            try {
+                Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(replace);
+                System.out.println(stringSetMap);
+            } catch (Exception e) {
+                System.out.println("有问题的文件是" + filePath);
+            }
+
 
 
         }

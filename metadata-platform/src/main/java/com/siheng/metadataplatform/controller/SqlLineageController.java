@@ -20,7 +20,7 @@ import java.util.Set;
  * @Desc
  */
 @RestController
-@RequestMapping("/sql-lineage")
+@RequestMapping("/sql/lineage")
 public class SqlLineageController {
 
 
