@@ -62,14 +62,14 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         for (String filePath : allModifyFilePath) {
             String allContent = GitUtil.getGitFileContent(filePath, branch);
             if (StringUtils.isBlank(allContent)) continue;
-            System.out.println("当前的文件为-----" + filePath);
+//            System.out.println("当前的文件为-----" + filePath);
             int startIndex = allContent.indexOf("-- begin_insert --");
             String sqlContent = allContent.substring(startIndex + "-- begin_insert --".length());
-            String replace = sqlContent.replace("[ broadcast ]", "");
+            String replace = sqlContent.replace("[ broadcast ]", "").replace(";", "");
 //            System.out.println(sqlContent);
             try {
                 Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(replace);
-                System.out.println(stringSetMap);
+//                System.out.println(stringSetMap);
             } catch (Exception e) {
                 System.out.println("有问题的文件是" + filePath);
             }
