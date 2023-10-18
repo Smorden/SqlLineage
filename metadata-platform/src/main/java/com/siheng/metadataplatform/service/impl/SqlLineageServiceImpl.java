@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.siheng.metadataplatform.mapper.neo4j.TblMapper;
+import com.siheng.metadataplatform.pojo.TblRelationShip;
 import com.siheng.metadataplatform.service.SqlLineageService;
 import com.siheng.metadataplatform.utils.GitUtil;
 import com.siheng.metadataplatform.utils.SqlLineageUtil;
@@ -67,13 +68,62 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             String sqlContent = allContent.substring(startIndex + "-- begin_insert --".length());
             String replace = sqlContent.replace("[ broadcast ]", "").replace(";", "");
 //            System.out.println(sqlContent);
-            try {
-                Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(replace);
+
+            Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(replace);
+
+            Set<String> select = new HashSet<>();
+            Set<String> insert = new HashSet<>();
+            for (Map.Entry<String, Set<String>> entry : stringSetMap.entrySet()) {
+                if (entry.getKey().equals("Select")) {
+                    for (String s : entry.getValue()) {
+                        int index = s.indexOf('.');
+                        if (index != -1) {
+                            String value = s.substring(index + 1, s.length());
+                            select.add(value);
+
+                        }
+
+                    }
+                }
+                if (entry.getKey().equals("Insert")) {
+                    for (String s : entry.getValue()) {
+                        int index = s.indexOf('.');
+                        if (index != -1) {
+                            String value = s.substring(index + 1, s.length());
+                            insert.add(value);
+                        }
+
+                    }
+                }
+
+
+            }
+//            System.out.println("当前" + filePath + "    " + insert);
+//            System.out.println("当前" + filePath + "    "  +  select);
 //                System.out.println(stringSetMap);
-            } catch (Exception e) {
-                System.out.println("有问题的文件是" + filePath);
+            Set<String> allTbl = new HashSet<>();
+
+            if (insert.size() > 0 && select.size() > 0) {
+                allTbl.addAll(select);
+                allTbl.addAll(insert);
+                tblMapper.insertTblList(allTbl);
+
+                TblRelationShip tblRelationShip = new TblRelationShip();
+                tblRelationShip.setSourceTbls(select);
+                tblRelationShip.setAllTbls(allTbl);
+                tblRelationShip.setTargetTbl(insert.iterator().next());
+                tblMapper.insertTblRelationShipList(tblRelationShip);
             }
 
+//
+//            Set<String> allTbl = new HashSet<>();
+//            allTbl.addAll(select);
+//            allTbl.addAll(insert);
+//            tblMapper.insertTblList(allTbl);
+
+
+//                tblMapper.insertTblList();
+//                tblMapper.insertTblRelationShipList();
 
 
         }
