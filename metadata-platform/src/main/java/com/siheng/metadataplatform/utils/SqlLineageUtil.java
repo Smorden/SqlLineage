@@ -1,10 +1,8 @@
 package com.siheng.metadataplatform.utils;
 
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.druid.sql.ast.SQLStatement;
 import com.alibaba.druid.sql.dialect.mysql.parser.MySqlStatementParser;
 import com.alibaba.druid.sql.dialect.mysql.visitor.MySqlSchemaStatVisitor;
-import com.alibaba.druid.stat.TableStat;
 
 import java.util.*;
 
@@ -23,22 +21,17 @@ public class SqlLineageUtil {
             if (StrUtil.isBlank(sql)) {
                 continue;
             }
-            MySqlStatementParser parser = new MySqlStatementParser(sql);
-            SQLStatement sqlStatement = parser.parseStatement();
             MySqlSchemaStatVisitor visitor = new MySqlSchemaStatVisitor();
-            sqlStatement.accept(visitor);
-            Map<TableStat.Name, TableStat> tableStatMap = visitor.getTables();
-            for (Map.Entry<TableStat.Name, TableStat> tableStatEntry : tableStatMap.entrySet()) {
-                String name = tableStatEntry.getKey().getName();
-                String value = tableStatEntry.getValue().toString();
-                if (map.containsKey(value)) {
-                    map.get(value).add(name);
+            new MySqlStatementParser(sql).parseStatement().accept(visitor);
+            visitor.getTables().forEach(((name, tableStat) -> {
+                if (map.containsKey(tableStat)) {
+                    map.get(tableStat.toString()).add(name.getName());
                 } else {
                     Set<String> list = new HashSet<>();
-                    list.add(name);
-                    map.put(value, list);
+                    list.add(name.getName());
+                    map.put(tableStat.toString(), list);
                 }
-            }
+            }));
         }
         return map;
     }

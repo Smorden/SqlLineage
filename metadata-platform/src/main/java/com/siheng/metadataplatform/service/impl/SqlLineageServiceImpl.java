@@ -9,9 +9,9 @@ import com.siheng.metadataplatform.service.SqlLineageService;
 import com.siheng.metadataplatform.utils.GitUtil;
 import com.siheng.metadataplatform.utils.SqlLineageUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.Set;
 @Service
 public class SqlLineageServiceImpl implements SqlLineageService {
 
-    @Autowired
+    @Resource
     private TblMapper tblMapper;
 
 
@@ -66,7 +66,10 @@ public class SqlLineageServiceImpl implements SqlLineageService {
 //            System.out.println("当前的文件为-----" + filePath);
             int startIndex = allContent.indexOf("-- begin_insert --");
             String sqlContent = allContent.substring(startIndex + "-- begin_insert --".length());
-            String replace = sqlContent.replace("[ broadcast ]", "").replace(";", "");
+            String replace = sqlContent.replace("[ broadcast ]", "")
+                    .replace(";", "")
+                    .replaceAll("with.*label.*@label", "")
+                    .replaceAll("WITH.*label.*@label", "");
 //            System.out.println(sqlContent);
 
             Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(replace);

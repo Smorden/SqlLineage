@@ -12,26 +12,26 @@ import java.util.*;
  */
 public class SqlLineageTest {
     public static void main(String[] args) throws Exception {
-        File folder = new File("/Users/shiyuchao/work/workspace/dw_core_sql/com.siheng.market.replenishment");
+        File folder = new File("D:\\idea\\workspace\\dw_core_sql\\com.siheng.ods");
         File[] listOfFiles = folder.listFiles();
 
-        List<String> myList = new ArrayList<String>(Arrays.asList("dwd_dim_mk_sku_ds.sql"));
+        List<String> myList = new ArrayList<String>(Arrays.asList("ads_pmod_product_operate_dashboard_week_ds.sql"));
 
         for (File file : listOfFiles) {
-            if (myList.contains(file.getName())) {
+//            if (myList.contains(file.getName())) {
+                System.out.println("正在执行的文件是" + file.getName());
                 BufferedReader reader = new BufferedReader(new FileReader(file));
                 String line = reader.readLine();
                 StringBuffer sb = new StringBuffer();
-                while(line != null) {
+                while (line != null) {
                     sb.append(line);
                     sb.append(System.lineSeparator());
                     line = reader.readLine();
                 }
-
-
                 String fileContents = sb.toString();
-                String replace = fileContents.replace("[ broadcast ]", " ");
-
+                String replace = fileContents.replace("[ broadcast ]", " ")
+                        .replaceAll("with.*label.*@label", "")
+                        .replaceAll("WITH.*label.*@label", "");
                 String keyword = "-- begin_insert --";
                 int index = fileContents.indexOf(keyword);
 
@@ -41,7 +41,7 @@ public class SqlLineageTest {
                     System.out.println(stringSetMap);
                 }
 
-            }
+//            }
         }
     }
 }
