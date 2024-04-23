@@ -83,11 +83,6 @@ public class GitUtil {
 
 
         fileNames.removeIf(element -> packages.stream().noneMatch(element::startsWith));
-
-        for (String fileName : fileNames) {
-            System.out.println(fileName);
-        }
-
         gitLabApi.close();
         return fileNames;
 

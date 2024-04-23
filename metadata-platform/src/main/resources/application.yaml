@@ -33,7 +33,6 @@ spring:
       max-active: 20 #最大连接池
       max-wait: 6000 #最大等待时长，毫秒
       min-idle: 1 #最小连接池
-      test-while-idle: true #连接时检测
       test-on-borrow: false #申请连接时执行检测
       test-on-return: false #规划连接时执行检测
       time-between-eviction-runs-millis: 60000 #检测间隔时间，毫秒

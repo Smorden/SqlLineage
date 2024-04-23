@@ -8,14 +8,12 @@ import com.siheng.metadataplatform.pojo.TblRelationShip;
 import com.siheng.metadataplatform.service.SqlLineageService;
 import com.siheng.metadataplatform.utils.GitUtil;
 import com.siheng.metadataplatform.utils.SqlLineageUtil;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Dearest
@@ -52,61 +50,32 @@ public class SqlLineageServiceImpl implements SqlLineageService {
 
     @Override
     public void initAllSqlLineage(String branch) throws Exception {
-        //删除neo4j里面所有节点和关系
-        tblMapper.deleteAllTblAndAllTblRelationShip();
-
+        List<String> availablePackages = Arrays.asList("com.siheng.dwd.dim", "com.siheng.dwd.fact", "com.siheng.dwd.binlog", "com.siheng.dwm", "com.siheng.dws", "com.siheng.dwt", "com.siheng.market.wms");
         //从git上获取所有的文件和文件内容
         String startDate = "2022-01-01";
         String endDate = "2030-01-01";
-        Set<String> allModifyFilePath = GitUtil.getAllModifyFilePath(startDate, endDate, branch);
-        allModifyFilePath.remove("com.siheng.dws/dws_ivct_iw_receive_to_shelf_stage_stock_ds.sql");
-        for (String filePath : allModifyFilePath) {
+        GitUtil.getAllModifyFilePath(startDate, endDate, branch).forEach(filePath -> {
             String allContent = GitUtil.getGitFileContent(filePath, branch);
-            if (StringUtils.isBlank(allContent)) continue;
-//            System.out.println("当前的文件为-----" + filePath);
-            int startIndex = allContent.indexOf("-- begin_insert --");
-            String sqlContent = allContent.substring(startIndex + "-- begin_insert --".length());
-            String replace = sqlContent.replace("[ broadcast ]", "")
-                    .replace(";", "")
+            if (!availablePackages.contains(StringUtils.substringBefore(filePath, "/")) || ObjectUtils.anyNull(allContent))
+                return;
+            System.out.println("正在执行的文件是" + filePath);
+            String replace = StringUtils.substringAfterLast(allContent, "-- begin_insert --")
+                    .replace("[ broadcast ]", "")
                     .replaceAll("with.*label.*@label", "")
                     .replaceAll("WITH.*label.*@label", "");
-//            System.out.println(sqlContent);
-
-            Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(replace);
-
             Set<String> select = new HashSet<>();
             Set<String> insert = new HashSet<>();
-            for (Map.Entry<String, Set<String>> entry : stringSetMap.entrySet()) {
-                if (entry.getKey().equals("Select")) {
-                    for (String s : entry.getValue()) {
-                        int index = s.indexOf('.');
-                        if (index != -1) {
-                            String value = s.substring(index + 1, s.length());
-                            select.add(value);
-
-                        }
-
-                    }
-                }
-                if (entry.getKey().equals("Insert")) {
-                    for (String s : entry.getValue()) {
-                        int index = s.indexOf('.');
-                        if (index != -1) {
-                            String value = s.substring(index + 1, s.length());
-                            insert.add(value);
-                        }
-
-                    }
-                }
-
-
-            }
-//            System.out.println("当前" + filePath + "    " + insert);
-//            System.out.println("当前" + filePath + "    "  +  select);
-//                System.out.println(stringSetMap);
+            SqlLineageUtil.sqlParser(replace).forEach((key, set) -> {
+                set.forEach(e -> {
+                    String tableName = StringUtils.substringAfterLast(e, ".");
+                    if ("Select".equals(key)) select.add(tableName);
+                    else if ("Insert".equals(key)) insert.add(tableName);
+                });
+            });
             Set<String> allTbl = new HashSet<>();
-
             if (insert.size() > 0 && select.size() > 0) {
+                //删除neo4j里面所有节点和关系
+                tblMapper.deleteAllTblAndAllTblRelationShip();
                 allTbl.addAll(select);
                 allTbl.addAll(insert);
                 tblMapper.insertTblList(allTbl);
@@ -117,20 +86,6 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                 tblRelationShip.setTargetTbl(insert.iterator().next());
                 tblMapper.insertTblRelationShipList(tblRelationShip);
             }
-
-//
-//            Set<String> allTbl = new HashSet<>();
-//            allTbl.addAll(select);
-//            allTbl.addAll(insert);
-//            tblMapper.insertTblList(allTbl);
-
-
-//                tblMapper.insertTblList();
-//                tblMapper.insertTblRelationShipList();
-
-
-        }
-
-
+        });
     }
 }

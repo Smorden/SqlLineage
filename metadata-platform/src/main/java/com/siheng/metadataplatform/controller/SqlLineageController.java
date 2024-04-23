@@ -2,6 +2,7 @@ package com.siheng.metadataplatform.controller;
 
 import com.siheng.metadataplatform.dto.ResultDto;
 import com.siheng.metadataplatform.service.SqlLineageService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping("/sql/lineage")
+@Slf4j
 public class SqlLineageController {
 
 
@@ -65,10 +67,10 @@ public class SqlLineageController {
         try {
             String branch = request.get("branch").toString();
             sqlLineageService.initAllSqlLineage(branch);
+            log.info("初始化完成 !!!");
         } catch (Exception e) {
             e.printStackTrace();
             return ResultDto.error(e.getMessage());
-
         }
         return ResultDto.success("初始化成功");
     }
