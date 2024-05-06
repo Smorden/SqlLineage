@@ -54,6 +54,8 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         //从git上获取所有的文件和文件内容
         String startDate = "2022-01-01";
         String endDate = "2030-01-01";
+        //删除neo4j里面所有节点和关系
+        tblMapper.deleteAllTblAndAllTblRelationShip();
         GitUtil.getAllModifyFilePath(startDate, endDate, branch).forEach(filePath -> {
             String allContent = GitUtil.getGitFileContent(filePath, branch);
             if (!availablePackages.contains(StringUtils.substringBefore(filePath, "/")) || ObjectUtils.anyNull(allContent))
@@ -74,8 +76,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             });
             Set<String> allTbl = new HashSet<>();
             if (insert.size() > 0 && select.size() > 0) {
-                //删除neo4j里面所有节点和关系
-                tblMapper.deleteAllTblAndAllTblRelationShip();
+
                 allTbl.addAll(select);
                 allTbl.addAll(insert);
                 tblMapper.insertTblList(allTbl);
