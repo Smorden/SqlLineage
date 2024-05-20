@@ -1,4 +1,5 @@
 import com.siheng.metadataplatform.utils.SqlLineageUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,10 +13,10 @@ import java.util.*;
  */
 public class SqlLineageTest {
     public static void main(String[] args) throws Exception {
-        File folder = new File("D:\\idea\\workspace\\dw_core_sql\\com.siheng.dwd.dim");
+        File folder = new File("D:\\idea\\workspace\\dw_core_sql\\com.siheng.dws");
         File[] listOfFiles = folder.listFiles();
 
-        List<String> myList = new ArrayList<String>(Arrays.asList("dwd_dim_spu_ds.sql"));
+        List<String> myList = new ArrayList<String>(Arrays.asList("dws_itop_amazon_asin_warning_inform_di.sql"));
 
         for (File file : listOfFiles) {
             if (myList.contains(file.getName())) {
@@ -29,18 +30,14 @@ public class SqlLineageTest {
                     line = reader.readLine();
                 }
                 String fileContents = sb.toString();
-                String replace = fileContents.replace("[ broadcast ]", " ")
+                String result = StringUtils.substringAfterLast(fileContents, "-- begin_insert --")
+                        .replace("[ broadcast ]", " ")
                         .replaceAll("with.*label.*@label", "")
                         .replaceAll(";", "")
                         .replaceAll("WITH.*label.*@label", "");
-                String keyword = "-- begin_insert --";
-                int index = fileContents.indexOf(keyword);
 
-                if (index != -1 && index + keyword.length() < replace.length()) {
-                    String result = replace.substring(index + keyword.length());
-                    Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(result.replace(";", ""));
+                    Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(result);
                     System.out.println(stringSetMap);
-                }
 
             }
         }

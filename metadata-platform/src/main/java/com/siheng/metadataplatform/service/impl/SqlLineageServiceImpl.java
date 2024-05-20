@@ -50,7 +50,6 @@ public class SqlLineageServiceImpl implements SqlLineageService {
 
     @Override
     public void initAllSqlLineage(String branch) throws Exception {
-        List<String> availablePackages = Arrays.asList("com.siheng.dwd.dim", "com.siheng.dwd.fact", "com.siheng.dwd.binlog", "com.siheng.dwm", "com.siheng.dws", "com.siheng.dwt", "com.siheng.market.wms");
         //从git上获取所有的文件和文件内容
         String startDate = "2022-01-01";
         String endDate = "2030-01-01";
@@ -58,11 +57,12 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         tblMapper.deleteAllTblAndAllTblRelationShip();
         GitUtil.getAllModifyFilePath(startDate, endDate, branch).forEach(filePath -> {
             String allContent = GitUtil.getGitFileContent(filePath, branch);
-            if (!availablePackages.contains(StringUtils.substringBefore(filePath, "/")) || ObjectUtils.anyNull(allContent))
+            if (ObjectUtils.anyNull(allContent))
                 return;
             System.out.println("正在执行的文件是" + filePath);
             String replace = StringUtils.substringAfterLast(allContent, "-- begin_insert --")
                     .replace("[ broadcast ]", "")
+                    .replaceAll(";", "")
                     .replaceAll("with.*label.*@label", "")
                     .replaceAll("WITH.*label.*@label", "");
             Set<String> select = new HashSet<>();

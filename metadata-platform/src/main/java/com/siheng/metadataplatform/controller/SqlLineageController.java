@@ -49,17 +49,6 @@ public class SqlLineageController {
         return null;
 //        return ResultDto.success(map);
     }
-
-
-//    @PostMapping(value = "/update")
-//    public String sayHello(@RequestBody Map<Object, Object> map) {
-//        System.out.println(map);
-//
-//
-//        return "Hello, World!";
-//    }
-
-
     @PostMapping(value = "/init")
     public ResultDto initAllSqlLineage(@RequestBody Map<String, Object> request) {
 
@@ -74,7 +63,4 @@ public class SqlLineageController {
         }
         return ResultDto.success("初始化成功");
     }
-
-
-
 }
