@@ -50,12 +50,10 @@ public class SqlLineageServiceImpl implements SqlLineageService {
 
     @Override
     public void initAllSqlLineage(String branch) throws Exception {
-        //从git上获取所有的文件和文件内容
-        String startDate = "2022-01-01";
-        String endDate = "2030-01-01";
         //删除neo4j里面所有节点和关系
         tblMapper.deleteAllTblAndAllTblRelationShip();
-        GitUtil.getAllModifyFilePath(startDate, endDate, branch).forEach(filePath -> {
+        //从git上获取所有的文件和文件内容
+        GitUtil.getAllModifyFilePath(branch).forEach(filePath -> {
             String allContent = GitUtil.getGitFileContent(filePath, branch);
             if (ObjectUtils.anyNull(allContent))
                 return;
@@ -70,8 +68,8 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             SqlLineageUtil.sqlParser(replace).forEach((key, set) -> {
                 set.forEach(e -> {
                     String tableName = StringUtils.substringAfterLast(e, ".");
-                    if ("Select".equals(key)) select.add(tableName);
-                    else if ("Insert".equals(key)) insert.add(tableName);
+                    if (key.startsWith("Select")) select.add(tableName);
+                    else if (key.startsWith("Insert")) insert.add(tableName);
                 });
             });
             Set<String> allTbl = new HashSet<>();

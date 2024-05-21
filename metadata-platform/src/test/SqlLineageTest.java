@@ -13,10 +13,10 @@ import java.util.*;
  */
 public class SqlLineageTest {
     public static void main(String[] args) throws Exception {
-        File folder = new File("D:\\idea\\workspace\\dw_core_sql\\com.siheng.dws");
+        File folder = new File("D:\\idea\\workspace\\dw_core_sql\\com.siheng.ads");
         File[] listOfFiles = folder.listFiles();
 
-        List<String> myList = new ArrayList<String>(Arrays.asList("dws_itop_amazon_asin_warning_inform_di.sql"));
+        List<String> myList = new ArrayList<String>(Arrays.asList("ads_pad_purchase_excute_details_df.sql"));
 
         for (File file : listOfFiles) {
             if (myList.contains(file.getName())) {
