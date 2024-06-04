@@ -42,6 +42,11 @@
         DETACH DELETE n
     </delete>
 
+    <delete id="deleteBeforeAllTblRelationShipList" parameterType="java.lang.String">
+        MATCH (node {name: #{tblName}})&lt;-[depends:RELATIONSHIP_TYPE]-(dependent)
+        DELETE depends
+    </delete>
+
 
     <!--    <update id="updateMovie" parameterType="com.minant.mant.form.MovieInfoForm">-->
     <!--        match (people:Movie)-->

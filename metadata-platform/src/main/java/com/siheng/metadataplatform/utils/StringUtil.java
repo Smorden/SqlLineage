@@ -7,7 +7,7 @@ import java.security.MessageDigest;
  * @CreateTime: 2024-05-13  11:21
  * @Description: 字符串工具类
  */
-public class StringUitls {
+public class StringUtil {
 
     public static Long generateUniqueNumber(String input) {
         try {
@@ -23,6 +23,14 @@ public class StringUitls {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static String getParseString(String replace) {
+        return org.apache.commons.lang3.StringUtils.substringAfterLast(replace, "-- begin_insert --")
+                .replace("[ broadcast ]", "")
+                .replaceAll(";", "")
+                .replaceAll("with.*label.*@label", "")
+                .replaceAll("WITH.*label.*@label", "");
     }
 
 }

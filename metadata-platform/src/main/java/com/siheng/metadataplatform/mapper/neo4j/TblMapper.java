@@ -23,4 +23,7 @@ public interface TblMapper {
 
     void deleteAllTblAndAllTblRelationShip();
 
+    void deleteBeforeAllTblRelationShipList(@Param("tblName") String tblName);
+
+
 }

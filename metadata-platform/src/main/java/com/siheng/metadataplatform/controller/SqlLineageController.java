@@ -3,17 +3,13 @@ package com.siheng.metadataplatform.controller;
 import com.siheng.metadataplatform.dto.ResultDto;
 import com.siheng.metadataplatform.service.SqlLineageService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Dearest
@@ -21,7 +17,7 @@ import java.util.Set;
  * @Desc
  */
 @RestController
-@RequestMapping("/sql/lineage")
+@RequestMapping("lineage")
 @Slf4j
 public class SqlLineageController {
 
@@ -30,29 +26,20 @@ public class SqlLineageController {
     private SqlLineageService sqlLineageService;
 
     @PostMapping(value = "/update")
-    public ResultDto updateSqlLineage(@RequestBody Map<String, Object> request) {
-//        Set<String> addAndModifyTableDirs = new HashSet<>();
-//        if (request.containsKey("commits")) {
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            List<Map<String, Object>> commits = objectMapper.convertValue(request.get("commits"), List.class);
-//
-//            for (Map<String, Object> commit : commits) {
-//                List<String> added = objectMapper.convertValue(commit.get("added"), List.class);
-//                List<String> modified = objectMapper.convertValue(commit.get("modified"), List.class);
-//
-//                addAndModifyTableDirs.addAll(added);
-//                addAndModifyTableDirs.addAll(modified);
-//            }
-//        }
-
-
-        return null;
-//        return ResultDto.success(map);
+    public ResultDto updateSqlLineage(@RequestBody Map<String, String> request) {
+        try {
+            sqlLineageService.updateSqlLineage(request);
+        } catch (Exception e) {
+            return ResultDto.error(e.getMessage());
+        }
+        return ResultDto.success("初始化成功");
     }
+
     @PostMapping(value = "/init")
     public ResultDto initAllSqlLineage(@RequestBody Map<String, Object> request) {
 
-        if (!request.containsKey("branch") || request.get("branch") == null) return ResultDto.error("请传入正确的分支名称");
+        if (!request.containsKey("branch") || request.get("branch") == null)
+            return ResultDto.error("请传入正确的分支名称");
         try {
             String branch = request.get("branch").toString();
             sqlLineageService.initAllSqlLineage(branch);
@@ -63,4 +50,17 @@ public class SqlLineageController {
         }
         return ResultDto.success("初始化成功");
     }
+
+    @PostMapping(value = "/ds/init")
+    public ResultDto initDsAllSqlLineage(@RequestBody Map<String, String> request) {
+        try {
+            sqlLineageService.initAllSqlLineage(request.getOrDefault("branch","release"));
+            log.info("ds初始化完成 !!!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResultDto.error(e.getMessage());
+        }
+        return ResultDto.success("初始化成功");
+    }
+
 }
