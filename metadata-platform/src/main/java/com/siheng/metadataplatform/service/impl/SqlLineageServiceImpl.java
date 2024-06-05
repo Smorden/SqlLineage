@@ -41,12 +41,12 @@ public class SqlLineageServiceImpl implements SqlLineageService {
             //diffs是每一次merge
             diffs.forEach(diff -> {//diff是每个变化的文件
                 String allContent = GitUtil.getGitFileContent(diff.getNewPath(), branch);
+                System.out.println("正在执行的文件是" + diff.getNewPath());
                 if (ObjectUtils.anyNull(allContent)) return;
                 Set<String> select = new HashSet<>();
                 String tableName = getInsertSet(allContent, select);
                 if (ObjectUtils.anyNull(tableName)) return;
                 if (StringUtils.contains(allContent, "@下线")) {
-                    System.out.println("tableName:"+tableName);
                     tblMapper.deleteTblAndAllTblRelationShipList(tableName);
                     return;
                 }
@@ -57,10 +57,6 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         });
     }
 
-    @Override
-    public void initDsAllSqlLineage(String branch) throws Exception {
-
-    }
 
     @Override
     public void initAllSqlLineage(String branch) throws Exception {

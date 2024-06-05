@@ -14,6 +14,4 @@ public interface SqlLineageService {
     void updateSqlLineage(Map<String, String> map)throws Exception;
 
     void initAllSqlLineage(String branch) throws Exception;
-
-    void initDsAllSqlLineage(String branch) throws Exception;
 }

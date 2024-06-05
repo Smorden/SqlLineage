@@ -15,6 +15,9 @@ import java.util.Map;
  * @author Dearest
  * @date 2023/9/6 9:57 上午
  * @Desc
+ * 1.如果是删除表---->标记@下线即可
+ * 2.如果是改表名---->标记原文件下线,新增一个新文件
+ * 3.一个文件只能有一个insert ... select
  */
 @RestController
 @RequestMapping("lineage")
@@ -50,17 +53,4 @@ public class SqlLineageController {
         }
         return ResultDto.success("初始化成功");
     }
-
-    @PostMapping(value = "/ds/init")
-    public ResultDto initDsAllSqlLineage(@RequestBody Map<String, String> request) {
-        try {
-            sqlLineageService.initAllSqlLineage(request.getOrDefault("branch","release"));
-            log.info("ds初始化完成 !!!");
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultDto.error(e.getMessage());
-        }
-        return ResultDto.success("初始化成功");
-    }
-
 }
