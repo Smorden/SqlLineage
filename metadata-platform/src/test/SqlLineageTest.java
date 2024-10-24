@@ -1,10 +1,13 @@
 import com.siheng.metadataplatform.utils.SqlLineageUtil;
+import com.siheng.metadataplatform.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.*;
+
+import static com.siheng.metadataplatform.constant.CustomConstant.emptyStr;
 
 /**
  * @author Dearest
@@ -13,13 +16,13 @@ import java.util.*;
  */
 public class SqlLineageTest {
     public static void main(String[] args) throws Exception {
-        File folder = new File("D:\\idea\\workspace\\dw_core_sql\\com.siheng.ads");
+        File folder = new File("D:\\idea\\workspace\\dw_core_sql\\com.siheng.dwd.binlog");
         File[] listOfFiles = folder.listFiles();
 
-        List<String> myList = new ArrayList<String>(Arrays.asList("ads_pad_purchase_excute_details_df.sql"));
+        List<String> myList = new ArrayList<String>(Arrays.asList("ads_scad_purchase_reduce_cost_index_df.sql"));
 
         for (File file : listOfFiles) {
-            if (myList.contains(file.getName())) {
+//            if (myList.contains(file.getName())) {
                 System.out.println("正在执行的文件是" + file.getName());
                 BufferedReader reader = new BufferedReader(new FileReader(file));
                 String line = reader.readLine();
@@ -30,16 +33,13 @@ public class SqlLineageTest {
                     line = reader.readLine();
                 }
                 String fileContents = sb.toString();
-                String result = StringUtils.substringAfterLast(fileContents, "-- begin_insert --")
-                        .replace("[ broadcast ]", " ")
-                        .replaceAll("with.*label.*@label", "")
-                        .replaceAll(";", "")
-                        .replaceAll("WITH.*label.*@label", "");
+                String result = StringUtil.getParseString(fileContents);
 
+//                System.out.println(StringUtils.substringBetween(fileContents,"-- scheduler:","\n"));
                     Map<String, Set<String>> stringSetMap = SqlLineageUtil.sqlParser(result);
-                    System.out.println(stringSetMap);
+//                    System.out.println(stringSetMap);
 
-            }
+//            }
         }
     }
 }

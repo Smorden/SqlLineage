@@ -70,7 +70,7 @@ public class HttpClientUtil {
     /**
      * Description: get请求
      *
-     * @param url     路径
+     * @param url 路径
      * @param headers 请求头信息
      * @return 响应结果
      */
@@ -94,6 +94,85 @@ public class HttpClientUtil {
         return result;
     }
 
+    /**
+     * Description: get请求
+     *
+     * @param url 路径
+     * @param headers 请求头信息
+     * @return 响应结果
+     */
+    public static String get(String url,Map<String,Object> params, Map<String, String> headers) throws Exception {
+        CloseableHttpClient httpClient = null;
+        HttpGet httpGet;
+        CloseableHttpResponse httpResponse = null;
+        String result;
+        StringBuffer jointStr=new StringBuffer("?");
+        try {
+            params.forEach((k,v)->{
+                jointStr.append(k+"="+v+"&");
+            });
+            jointStr.deleteCharAt(jointStr.length()-1);
+            httpClient = HttpClientBuilder.create().build();
+
+            httpGet = new HttpGet(url+jointStr);
+            //设置请求头
+            setHeader(headers, httpGet);
+            RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).build();
+            httpGet.setConfig(config);
+            result = getHttpClientResult(httpResponse, httpClient, httpGet);
+        } finally {
+            release(httpResponse, httpClient);
+        }
+        return result;
+    }
+
+    public static String delete(String url,Map<String,Object> params, Map<String, String> headers) throws Exception{
+        CloseableHttpClient httpClient = null;
+        HttpDelete httpDelete;
+        CloseableHttpResponse httpResponse = null;
+        String result;
+        StringBuffer jointStr=new StringBuffer("?");
+        try {
+            params.forEach((k,v)->{
+                jointStr.append(k+"="+v+"&");
+            });
+            jointStr.deleteCharAt(jointStr.length()-1);
+            httpClient = HttpClientBuilder.create().build();
+
+            httpDelete = new HttpDelete(url+jointStr);
+            //设置请求头
+            setHeader(headers, httpDelete);
+            RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).build();
+            httpDelete.setConfig(config);
+            result = getHttpClientResult(httpResponse, httpClient, httpDelete);
+        } finally {
+            release(httpResponse, httpClient);
+        }
+        return result;
+    }
+
+    public static String put(String url,Map<String,Object> params, Map<String, String> headers) throws Exception{
+        CloseableHttpClient httpClient = null;
+        HttpPut httpPut;
+        CloseableHttpResponse httpResponse = null;
+        String result;
+        try {
+            httpClient = HttpClientBuilder.create().build();
+            httpPut = new HttpPut(url);
+            //设置请求头
+            setHeader(headers, httpPut);
+            //设置参数
+            setParam(params, httpPut);
+
+            RequestConfig config = RequestConfig.custom().setConnectTimeout(CONNECT_TIMEOUT).setSocketTimeout(SOCKET_TIMEOUT).build();
+            httpPut.setConfig(config);
+
+            result = getHttpClientResult(httpResponse, httpClient, httpPut);
+        } finally {
+            release(httpResponse, httpClient);
+        }
+        return result;
+    }
 
     /**
      * Description: post请求
@@ -219,6 +298,7 @@ public class HttpClientUtil {
         }
         return result;
     }
+
 
 
     /**

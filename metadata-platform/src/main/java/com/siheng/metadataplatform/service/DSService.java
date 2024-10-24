@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public interface DSService {
 
-    void updateProcess(Map<String, String> map)throws Exception;
+    void updateProcess(String targetBranch, String mergeCommitSha)throws Exception;
 
     void initProcess(String branch) throws Exception;
 }

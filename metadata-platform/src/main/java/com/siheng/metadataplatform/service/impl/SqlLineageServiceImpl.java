@@ -5,7 +5,6 @@ import com.siheng.metadataplatform.pojo.TblRelationShip;
 import com.siheng.metadataplatform.service.SqlLineageService;
 import com.siheng.metadataplatform.utils.GitUtil;
 import com.siheng.metadataplatform.utils.SqlLineageUtil;
-import com.siheng.metadataplatform.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -44,7 +43,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                 System.out.println("正在执行的文件是" + diff.getNewPath());
                 if (ObjectUtils.anyNull(allContent)) return;
                 Set<String> select = new HashSet<>();
-                String tableName = getInsertSet(allContent, select);
+                String tableName = SqlLineageUtil.getInsertSet(allContent, select);
                 if (ObjectUtils.anyNull(tableName)) return;
                 if (StringUtils.contains(allContent, "@下线")) {
                     tblMapper.deleteTblAndAllTblRelationShipList(tableName);
@@ -69,7 +68,7 @@ public class SqlLineageServiceImpl implements SqlLineageService {
                 return;
             System.out.println("正在执行的文件是" + filePath);
             Set<String> select = new HashSet<>();
-            String tableName = getInsertSet(allContent, select);
+            String tableName = SqlLineageUtil.getInsertSet(allContent, select);
             insertTblAndRelation(select, tableName);
         });
     }
@@ -88,15 +87,5 @@ public class SqlLineageServiceImpl implements SqlLineageService {
         }
     }
 
-    private static String getInsertSet(String allContent, Set<String> select) {
-        Set<String> insert = new HashSet<>();
-        SqlLineageUtil.sqlParser(StringUtil.getParseString(allContent)).forEach((key, set) -> {
-            set.forEach(e -> {
-                String tableName = StringUtils.substringAfterLast(e, ".");
-                if (key.startsWith("Select")) select.add(tableName);
-                else if (key.startsWith("Insert")) insert.add(tableName);
-            });
-        });
-        return insert.size() > 0 ? insert.iterator().next() : "";
-    }
+
 }

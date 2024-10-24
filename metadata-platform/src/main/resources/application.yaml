@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 
 
@@ -19,7 +19,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     first:
-      url: jdbc:mysql://fe2.service-test.oigbuy.com:3306/data_hub?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      url: jdbc:mysql://fe2.service-test.oigbuy.com:3306/scheduler_meta?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
       username: root
       password: root123
       driver-class-name: com.mysql.cj.jdbc.Driver

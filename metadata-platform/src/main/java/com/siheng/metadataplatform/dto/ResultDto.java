@@ -30,22 +30,11 @@ public class ResultDto<T> implements Serializable {
         this.code = code;
     }
 
-    public ResultDto(Integer code, String message) {
-        this.code = code;
-        this.message = message;
-    }
-
     public static <T> ResultDto<T> success() {
         return new ResultDto<T>(ResultCode.SUCCESS.getCode());
     }
 
-
-    public static <T> ResultDto<T> success(String message) {
-        return new ResultDto<T>(ResultCode.SUCCESS.getCode(), message);
-    }
-
-
-    public static <T> ResultDto success(T data){
+    public static <T> ResultDto success(T data) {
         return ResultDto.builder()
                 .code(ResultCode.SUCCESS.getCode())
                 .data(data)
@@ -53,15 +42,11 @@ public class ResultDto<T> implements Serializable {
                 .build();
     }
 
-
-
-    public static <T> ResultDto error(String message){
+    public static <T> ResultDto error(T data) {
         return ResultDto.builder()
                 .code(ResultCode.ERROR.getCode())
-                .message(message)
-                .data(null)
+                .message(ResultCode.ERROR.getMessage())
+                .data(data)
                 .build();
     }
-
-
 }

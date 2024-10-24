@@ -1,8 +1,11 @@
 package com.siheng.metadataplatform.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.siheng.metadataplatform.dto.ResultDto;
 import com.siheng.metadataplatform.service.SqlLineageService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +35,27 @@ public class SqlLineageController {
     public ResultDto updateSqlLineage(@RequestBody Map<String, String> request) {
         try {
             sqlLineageService.updateSqlLineage(request);
+        } catch (Exception e) {
+            return ResultDto.error(e.getMessage());
+        }
+        return ResultDto.success("初始化成功");
+    }
+
+    @PostMapping(value = "/callback")
+    public ResultDto callbackSqlLineage(@RequestBody String request) {
+        try {
+
+//            if(StringUtils.isNoneEmpty(request)){
+//                JSONObject baseJson = JSON.parseObject(request);
+//                JSONObject objectAttributes = baseJson.getJSONObject("object_attributes");
+//                if("merged".equals(objectAttributes.getString("state"))){
+//                    String targetBranch = objectAttributes.getString("target_branch");
+//
+////            sqlLineageService.updateSqlLineage(request);
+//                    System.out.println(request);
+//                    log.info("ds初始化完成 !!!");
+//                }
+//            }
         } catch (Exception e) {
             return ResultDto.error(e.getMessage());
         }
