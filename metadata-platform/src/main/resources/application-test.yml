@@ -1,9 +1,3 @@
-server:
-  port: 8081
-
-
-
-
 siheng:
   gitlab:
     host: http://git.server.oigbuy.com/
@@ -11,9 +5,9 @@ siheng:
     namespace: bigdata
     projectName: dw_core_sql
     branch: test
-
-
-
+  ds:
+    baseUrl: http://fe1.service-test.oigbuy.com:12345
+    token: 7e7a6b27bbba0277de0abc5540f761f6
 
 spring:
   datasource:

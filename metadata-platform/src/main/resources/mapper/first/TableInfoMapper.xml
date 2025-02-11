@@ -1,8 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.siheng.metadataplatform.mapper.first.TableInfoMapper">
-    <select id="queryAll" resultType="com.siheng.metadataplatform.pojo.TableInfo">
-        select task_name taskName,server_name serverName,db_name dbName,table_name tableName,config,is_enable isEnable,initial_flag initialFlag
-         from table_info
+    <!-- 定义resultMap -->
+    <resultMap id="tableInfoResultMap" type="com.siheng.metadataplatform.pojo.TableInfo">
+        <result property="taskName" column="taskName"/>
+        <result property="serverName" column="serverName"/>
+        <result property="dbName" column="dbName"/>
+        <result property="tableName" column="tableName"/>
+        <result property="config" column="config" typeHandler="com.siheng.metadataplatform.tpye.JsonTypeHandler"/>
+        <result property="isEnable" column="isEnable"/>
+        <result property="initialFlag" column="initialFlag"/>
+    </resultMap>
+
+    <parameterMap id="tableInfoRequestMap" type="com.siheng.metadataplatform.pojo.TableInfo">
+        <parameter property="taskName" jdbcType="VARCHAR"/>
+        <parameter property="serverName" jdbcType="VARCHAR"/>
+        <parameter property="dbName" jdbcType="VARCHAR"/>
+        <parameter property="tableName" jdbcType="VARCHAR"/>
+        <parameter property="config" jdbcType="VARCHAR" typeHandler="com.siheng.metadataplatform.tpye.JsonTypeHandler"/>
+        <parameter property="isEnable" jdbcType="INTEGER"/>
+        <parameter property="initialFlag" jdbcType="INTEGER"/>
+    </parameterMap>
+
+    <select id="queryAll" resultMap="tableInfoResultMap">
+        select task_name                        taskName,
+               server_name                      serverName,
+               db_name                          dbName,
+               table_name                       tableName,
+               IFNULL(NULLIF(config, ''), '{}') config,
+               is_enable                        isEnable,
+               initial_flag                     initialFlag
+        from table_info
     </select>
+
+    <select id="queryByTaskName" resultMap="tableInfoResultMap">
+        select task_name                        taskName,
+               server_name                      serverName,
+               db_name                          dbName,
+               table_name                       tableName,
+               IFNULL(NULLIF(config, ''), '{}') config,
+               is_enable                        isEnable,
+               initial_flag                     initialFlag
+        from table_info
+        where task_name = #{taskName}
+    </select>
+
+    <insert id="save" parameterMap="tableInfoRequestMap">
+        REPLACE
+        INTO table_info ( `task_name`, `server_name`, `db_name`, `table_name`, `config`, `is_enable`, `initial_flag`) values
+            (
+        #{taskName},
+        #{serverName},
+        #{dbName},
+        #{tableName},
+        #{config,typeHandler=com.siheng.metadataplatform.tpye.JsonTypeHandler},
+        #{isEnable},
+        #{initialFlag}
+        );
+    </insert>
 </mapper>

@@ -1,5 +1,9 @@
 package com.siheng.metadataplatform.service;
 
+import com.siheng.metadataplatform.pojo.GlobalParams;
+import com.siheng.metadataplatform.pojo.TableInfo;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,7 +13,14 @@ import java.util.Map;
  */
 public interface DSService {
 
-    void updateProcess(String targetBranch, String mergeCommitSha)throws Exception;
+    void updateProcess(String uniqueKey)throws Exception;
 
     void initProcess(String branch) throws Exception;
+
+    List<GlobalParams> save(GlobalParams globalParams) throws Exception;
+
+    String startProcessInstance(Map<String, String> requestMap)throws Exception;
+    TableInfo getTableInfoByTaskName(TableInfo tableInfo) throws Exception;
+
+
 }

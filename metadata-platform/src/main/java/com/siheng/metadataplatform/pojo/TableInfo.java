@@ -1,5 +1,6 @@
 package com.siheng.metadataplatform.pojo;
 
+import com.alibaba.fastjson.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,11 +14,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TableInfo {
-    private String taskName;
-    private String serverName;
-    private String dbName;
-    private String tableName;
-    private String config;
-    private Integer isEnable;
-    private Integer initialFlag;
+    public String taskName;
+    public String serverName;
+    public String dbName;
+    public String tableName;
+    public JSONObject config;
+    public Integer isEnable;
+    public Integer initialFlag;
 }

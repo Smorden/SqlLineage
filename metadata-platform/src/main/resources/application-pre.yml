@@ -1,0 +1,39 @@
+siheng:
+  gitlab:
+    host: http://git.server.oigbuy.com/
+    accessToken: we_x-cPYsdp4Ane9sHed
+    namespace: bigdata
+    projectName: dw_core_sql
+    branch: pre
+  ds:
+    baseUrl: http://ds3.service-pre.oigbuy.com:12345
+    token: ca29874d4b5043c5d9f0d30a96cd355c
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    first:
+      url: jdbc:mysql://mini2.service-pre.oigbuy.com:3306/scheduler_meta?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    second:
+      url: jdbc:mysql://mini2.service-pre.oigbuy.com:3306/bbb?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+      username: root
+      password: root
+      driver-class-name: com.mysql.cj.jdbc.Driver
+    druid:
+      initial-size: 5 #初始连接数
+      max-active: 20 #最大连接池
+      max-wait: 6000 #最大等待时长，毫秒
+      min-idle: 1 #最小连接池
+      test-on-borrow: false #申请连接时执行检测
+      test-on-return: false #规划连接时执行检测
+      time-between-eviction-runs-millis: 60000 #检测间隔时间，毫秒
+      min-evictable-idle-time-millis: 300000 #连接池最小生存时间，毫秒
+      max-evictable-idle-time-millis: 900000 #连接池最大生存时间，毫秒
+    neo4j:
+      url: jdbc:neo4j:bolt://10.10.145.242:7687
+      driver-class-name: org.neo4j.jdbc.bolt.BoltDriver
+      username: neo4j
+      password: neo4j123

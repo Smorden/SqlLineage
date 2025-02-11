@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.siheng.metadataplatform.mapper.first.GlobalParamsMapper">
+    <select id="queryAll" resultType="com.siheng.metadataplatform.pojo.GlobalParams">
+        select process_name processName ,direct,type,prop,value from global_params
+    </select>
+
+    <insert id="save" parameterType="com.siheng.metadataplatform.pojo.GlobalParams">
+        REPLACE INTO global_params ( `prop`, `value`) values ( #{prop}, #{value});
+    </insert>
+</mapper>
