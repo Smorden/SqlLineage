@@ -71,7 +71,12 @@ public class DSServiceImpl implements DSService {
                     String tableName = SqlLineageUtil.getInsertSet(allContent, select);
                     if (emptyStr.equals(tableName))
                         tableName = diff.getNewPath().replaceAll(".*/", emptyStr).replaceAll(".sql", emptyStr);
-                    String command = StringUtils.substringBetween(allContent, schedulerStr, carriageReturn);
+                    String scheduleTask = StringUtils.substringBetween(allContent, scheduleStr, carriageReturn);
+                    if (StringUtils.isNotBlank(scheduleTask)){
+                        select.add(scheduleTask);
+                        schedulers.put(scheduleTask, commandPrefix + schedule + blankStr + scheduleTask);
+                    }
+                    String command = StringUtils.substringBetween(allContent, execStr, carriageReturn);
                     if (StringUtils.isNoneEmpty(command)) schedulers.put(tableName, command);
                     String add_before_task = StringUtils.substringBetween(allContent, add_before_taskStr, carriageReturn);
                     if (StringUtils.isNotBlank(add_before_task))
@@ -338,7 +343,12 @@ public class DSServiceImpl implements DSService {
                 schedulers.put(tableName, defaultCommand);
                 return;
             }
-            String command = StringUtils.substringBetween(allContent, schedulerStr, carriageReturn);
+            String scheduleTask = StringUtils.substringBetween(allContent, scheduleStr, carriageReturn);
+            if (StringUtils.isNotBlank(scheduleTask)){
+                select.add(scheduleTask);
+                schedulers.put(scheduleTask, commandPrefix + schedule + blankStr + scheduleTask);
+            }
+            String command = StringUtils.substringBetween(allContent, execStr, carriageReturn);
             String add_before_task = StringUtils.substringBetween(allContent, add_before_taskStr, carriageReturn);
             if (StringUtils.isNotBlank(add_before_task))
                 Arrays.stream(add_before_task.replaceAll("\\s*", emptyStr).split(commaStr)).forEach(e -> select.add(e));
@@ -496,11 +506,6 @@ public class DSServiceImpl implements DSService {
         //找出需要删除的依赖
         Map<String, Set<String>> removeLineage = new HashMap<>();
         Map<String, String> schedulers = new HashMap<>();
-        if (!StringUtils.equals(tableInfo.getConfig().getString(exec), queryTableInfo.getConfig().getString(exec))) {
-            addLineage.put(tableInfo.getTaskName(), new HashSet<>());
-            if (tableInfo.getConfig().containsKey(exec))
-                schedulers.put(tableInfo.getTaskName(), tableInfo.config.getString(exec));
-        }
         //找出需要删除的节点
         Set<String> removeTasks = new HashSet<>();
         //处理ds的逻辑
@@ -509,6 +514,11 @@ public class DSServiceImpl implements DSService {
                 addLineage.put(tableInfo.getTaskName(), getSelectSet(tableInfo));
             }
         } else {//修改
+            if (!StringUtils.equals(tableInfo.getConfig().getString(exec), queryTableInfo.getConfig().getString(exec))) {
+                addLineage.put(tableInfo.getTaskName(), new HashSet<>());
+                if (tableInfo.getConfig().containsKey(exec))
+                    schedulers.put(tableInfo.getTaskName(), tableInfo.config.getString(exec));
+            }
             if (queryTableInfo.isEnable == 1 && (null == queryTableInfo.getConfig().getString(processName) || defaultProcessName.equals(queryTableInfo.getConfig().getString(processName))) && (tableInfo.isEnable == 0 || (null != tableInfo.getConfig().getString(processName) && !defaultProcessName.equals(tableInfo.getConfig().getString(processName))))) {
                 //删除当前节点
                 removeLineage.put(queryTableInfo.getTaskName(), getSelectSet(queryTableInfo));
@@ -523,7 +533,6 @@ public class DSServiceImpl implements DSService {
                 if (!StringUtils.equals(querySchedule, tableSchedule)) {
                     HashSet addSelectSet = new HashSet<String>();
                     //ds新增当前节点
-                    addSelectSet.add(start);
                     addSelectSet.add(tableSchedule);
                     addSelectSet.remove(null);
                     if (!addSelectSet.isEmpty()) addLineage.put(tableInfo.getTaskName(), addSelectSet);

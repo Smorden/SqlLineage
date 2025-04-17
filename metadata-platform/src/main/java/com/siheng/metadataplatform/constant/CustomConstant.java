@@ -75,7 +75,8 @@ public class CustomConstant {
     public static String defaultCommand = "echo 111";
     public static String startCommand = "echo 111";
     public static String downLine = "@下线";
-    public static String schedulerStr = "-- exec:";
+    public static String execStr = "-- exec:";
+    public static String scheduleStr = "-- schedule:";
     public static String processNameStr = "-- process_name:";
     public static String add_before_taskStr = "-- add_before_task:";
     public static String del_before_taskStr = "-- del_before_task:";
